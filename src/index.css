@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+}
+
+.herosection-h1{
+  color: #101010;
+  font-family: Satoshi;
+  font-size: 62px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 93px */
+}
+
+.herosection-p{
+  color: var(--Slate-700, #334155);
+  font-family: Satoshi;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 33px */
+  padding: 5% 0;
+}
+
+.herosection-p2{
+  color: var(--Slate-800, #1E293B);
+  font-family: Satoshi;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  padding: 5% 0;
+  display: flex;
+}
+
+.herosection-p2-3{
+  display: flex;
+  align-items: flex-start;
+  gap: -8px;
+}
+
+.hero-button{
+  display: flex;
+  padding: 5% 0;
+  align-items: center;
+  gap: var(--spacing-15, 3%);
+}
+
+.market-section-h2{
+  color: #0A0A0A;
+  font-family: Satoshi;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 72px; /* 150% */
+  letter-spacing: var(--font-tracking-normal, 0);
+}
+
+.market-section-p{
+  color: #222;
+  font-family: Satoshi;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 40px; /* 181.818% */
+  letter-spacing: var(--font-tracking-normal, 0);
+}
+.feature-card
+{
+  display: flex;
+  align-items: flex-start;
+  gap: 114px;
+  align-self: stretch;
+}
+.feature-card-1{
+  display: flex;
+  width: 380px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 27px;
+}
+
+.feature-card-h3{
+  color: var(--Slate-800, #1E293B);
+  font-family: Satoshi;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 37.333px; /* 186.667% */
+}
+
+.feature-card-p{
+  color: var(--Slate-700, #334155);
+  font-family: Satoshi;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px; /* 175% */
+}
+

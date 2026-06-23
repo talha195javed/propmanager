@@ -1,0 +1,386 @@
+import { Building2, Users, Home, BarChart3, FileText, Wrench, CheckCircle, ArrowRight, Menu, X } from 'lucide-react'
+
+function App() {
+  return (
+    <div className="min-h-screen bg-[#F4F4F4]">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 bg-[#F4F4F4] backdrop-blur-sm z-50 border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="text-2xl font-bold text-gray-900"><svg width="152" height="29" viewBox="0 0 152 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6.49513 22.9912L14.5 15L22.4905 22.9912L22.4905 9.99102L14.5 5L6.49275 9.99095L6.49513 22.9912Z" fill="url(#paint0_linear_71_12984)"/>
+            <path d="M36.0144 16.7028H32.9554V21.4908H30.5234V7.60184H36.0144C38.8074 7.60184 40.6124 9.42584 40.6124 12.1428C40.6124 14.8218 38.7884 16.7028 36.0144 16.7028ZM35.5394 9.76784H32.9554V14.5368H35.5014C37.1734 14.5368 38.0664 13.6438 38.0664 12.1238C38.0664 10.6038 37.1544 9.76784 35.5394 9.76784ZM48.3961 12.0668V14.2138H47.5411C45.8691 14.2138 44.8241 15.1068 44.8241 16.9308V21.4908H42.5061V12.1238H44.6911L44.8241 13.4918C45.2231 12.5608 46.1161 11.9338 47.3701 11.9338C47.6931 11.9338 48.0161 11.9718 48.3961 12.0668ZM49.2887 16.7788C49.2887 13.8528 51.3977 11.8388 54.3047 11.8388C57.2117 11.8388 59.3207 13.8528 59.3207 16.7788C59.3207 19.7048 57.2117 21.7188 54.3047 21.7188C51.3977 21.7188 49.2887 19.7048 49.2887 16.7788ZM51.6067 16.7788C51.6067 18.4888 52.7087 19.6478 54.3047 19.6478C55.9007 19.6478 57.0027 18.4888 57.0027 16.7788C57.0027 15.0688 55.9007 13.9098 54.3047 13.9098C52.7087 13.9098 51.6067 15.0688 51.6067 16.7788ZM61.3481 25.8418V12.1048H63.4951L63.6471 13.5298C64.2171 12.4468 65.4521 11.8198 66.8771 11.8198C69.5181 11.8198 71.2661 13.7388 71.2661 16.6838C71.2661 19.6098 69.6701 21.7378 66.8771 21.7378C65.4711 21.7378 64.2551 21.1868 63.6661 20.2368V25.8418H61.3481ZM63.6851 16.7978C63.6851 18.4888 64.7301 19.6478 66.3261 19.6478C67.9601 19.6478 68.9291 18.4698 68.9291 16.7978C68.9291 15.1258 67.9601 13.9288 66.3261 13.9288C64.7301 13.9288 63.6851 15.1068 63.6851 16.7978ZM75.9997 21.4908H73.6437V7.60184H75.9997L80.4837 18.6598L84.9677 7.60184H87.3617V21.4908H85.0057V17.2158C85.0057 14.4228 85.0057 13.6058 85.1387 12.6178L81.6047 21.4908H79.3627L75.8477 12.6368C75.9807 13.4728 75.9997 14.7838 75.9997 16.5128V21.4908ZM93.0767 21.7378C91.0817 21.7378 89.8657 20.5788 89.8657 18.8118C89.8657 17.0828 91.1197 15.9998 93.3427 15.8288L96.1547 15.6198V15.4108C96.1547 14.1378 95.3947 13.6248 94.2167 13.6248C92.8487 13.6248 92.0887 14.1948 92.0887 15.1828H90.1127C90.1127 13.1498 91.7847 11.8198 94.3307 11.8198C96.8577 11.8198 98.4157 13.1878 98.4157 15.7908V21.4908H96.3827L96.2117 20.1038C95.8127 21.0728 94.5397 21.7378 93.0767 21.7378ZM93.8367 19.9898C95.2617 19.9898 96.1737 19.1348 96.1737 17.6908V17.1968L94.2167 17.3488C92.7727 17.4818 92.2217 17.9568 92.2217 18.7168C92.2217 19.5718 92.7917 19.9898 93.8367 19.9898ZM103.201 21.4908H100.883V12.1048H103.03L103.22 13.3208C103.809 12.3708 104.949 11.8198 106.222 11.8198C108.578 11.8198 109.794 13.2828 109.794 15.7148V21.4908H107.476V16.2658C107.476 14.6888 106.697 13.9288 105.5 13.9288C104.075 13.9288 103.201 14.9168 103.201 16.4368V21.4908ZM115.054 21.7378C113.059 21.7378 111.843 20.5788 111.843 18.8118C111.843 17.0828 113.097 15.9998 115.32 15.8288L118.132 15.6198V15.4108C118.132 14.1378 117.372 13.6248 116.194 13.6248C114.826 13.6248 114.066 14.1948 114.066 15.1828H112.09C112.09 13.1498 113.762 11.8198 116.308 11.8198C118.835 11.8198 120.393 13.1878 120.393 15.7908V21.4908H118.36L118.189 20.1038C117.79 21.0728 116.517 21.7378 115.054 21.7378ZM115.814 19.9898C117.239 19.9898 118.151 19.1348 118.151 17.6908V17.1968L116.194 17.3488C114.75 17.4818 114.199 17.9568 114.199 18.7168C114.199 19.5718 114.769 19.9898 115.814 19.9898ZM122.329 16.5888C122.329 13.8528 124.115 11.8008 126.794 11.8008C128.2 11.8008 129.302 12.3898 129.853 13.3968L129.986 12.1048H132.133V21.0158C132.133 24.1508 130.252 26.1078 127.212 26.1078C124.514 26.1078 122.671 24.5688 122.386 22.0608H124.704C124.856 23.2768 125.787 23.9988 127.212 23.9988C128.808 23.9988 129.834 22.9918 129.834 21.4338V19.8758C129.245 20.7498 128.086 21.3008 126.737 21.3008C124.077 21.3008 122.329 19.3058 122.329 16.5888ZM124.666 16.5318C124.666 18.1088 125.673 19.2868 127.193 19.2868C128.789 19.2868 129.777 18.1658 129.777 16.5318C129.777 14.9358 128.808 13.8338 127.193 13.8338C125.654 13.8338 124.666 14.9928 124.666 16.5318ZM138.92 21.7378C136.127 21.7378 134.17 19.7048 134.17 16.7978C134.17 13.8528 136.089 11.8198 138.844 11.8198C141.656 11.8198 143.442 13.7008 143.442 16.6268V17.3298L136.374 17.3488C136.545 19.0018 137.419 19.8378 138.958 19.8378C140.231 19.8378 141.067 19.3438 141.333 18.4508H143.48C143.081 20.5028 141.371 21.7378 138.92 21.7378ZM138.863 13.7198C137.495 13.7198 136.659 14.4608 136.431 15.8668H141.143C141.143 14.5748 140.25 13.7198 138.863 13.7198ZM151.378 12.0668V14.2138H150.523C148.851 14.2138 147.806 15.1068 147.806 16.9308V21.4908H145.488V12.1238H147.673L147.806 13.4918C148.205 12.5608 149.098 11.9338 150.352 11.9338C150.675 11.9338 150.998 11.9718 151.378 12.0668Z" fill="url(#paint1_linear_71_12984)"/>
+            <defs>
+              <linearGradient id="paint0_linear_71_12984" x1="7.634" y1="26.5961" x2="23.279" y2="12.0942" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0048FF"/>
+                <stop offset="1" stop-color="#187EFD"/>
+              </linearGradient>
+              <linearGradient id="paint1_linear_71_12984" x1="18.9844" y1="16.9908" x2="145.484" y2="29.4908" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0048FF"/>
+                <stop offset="1" stop-color="#187EFD"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          </div>
+          <div className="hidden md:flex items-center space-x-8">
+            <a href="#features" className="text-gray-600 hover:text-gray-900 transition">Features</a>
+            <a href="#pricing" className="text-gray-600 hover:text-gray-900 transition">Pricing</a>
+            <a href="#about" className="text-gray-600 hover:text-gray-900 transition">About us</a>
+            <a href="#login" className="text-gray-600 hover:text-gray-900 transition">Log in</a>
+            <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition font-medium">
+              Start Free Trial
+            </button>
+          </div>
+          <button className="md:hidden">
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+      </nav>
+      {/* Hero Section */}
+      <section className="px-6 pt-32 pb-14">
+          <div className="bg-white ml-24 mr-24 rounded-2xl shadow-xl p-20 grid md:grid-cols-2 gap-20 items-center">
+            <div>
+              <h1 className="herosection-h1">
+                Simplify Your <span style={{color:"#0048FF"}}>UAE</span> Property Management
+              </h1>
+              <p className="herosection-p">
+                The all-in-one SaaS solution designed for UAE landlords, real estate investors, and property managers. Save time, reduce manual work, and stay compliant with local regulations.
+              </p>
+              <div className="hero-button">
+                <button className="bg-blue-600 text-white px-8 py-4 rounded-full hover:bg-blue-700 transition font-medium text-lg">
+                  Start Free Trial
+                </button>
+                <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full hover:border-gray-400 transition font-medium text-lg">
+                  Book Demo
+                </button>
+              </div>
+
+              <p className="herosection-p2">
+                <img src="/herosection-p2-3.svg" alt="Hero Section" className="herosection-p2-3" />
+<div className="ml-5">
+                Trusted by 500+ landlords and property managers across the UAE
+</div>
+              </p>
+            </div>
+            <img src="/herosection.svg" alt="Hero Section" className="w-full h-auto" />
+          </div>
+      </section>
+
+
+      {/* Tailored for UAE Market Section */}
+      <section id="features" className="px-6 pt-24 pb-14">
+        <div className="bg-white ml-24 mr-24 rounded-2xl shadow-xl p-20 items-center">
+          <div className="mb-16 grid md:grid-cols-2 gap-20">
+            <h2 className="market-section-h2">Tailored for the UAE Market</h2>
+            <p className="market-section-p">
+              From Ejari registration to post-dated cheque tracking, every feature is tailored to meet local compliance requirements and operational needs.
+            </p>
+          </div>
+          <div className="feature-card">
+            {/* For Landlords */}
+            <div className="feature-card-1">
+              <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="44" height="44" rx="12" fill="#F1F5F9"/>
+                  <path d="M29.5 24.5V17.8334H22.8333M29.5 17.8334L22.8333 24.5L19.5 21.1667L14.5 26.1667" stroke="url(#paint0_linear_71_13127)" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                  <defs>
+                    <linearGradient id="paint0_linear_71_13127" x1="13.2805" y1="23.0417" x2="28.8449" y2="23.4919" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#0048FF"/>
+                      <stop offset="1" stop-color="#187EFD"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              <h3 className="feature-card-h3">For Landlords</h3>
+              <p className="feature-card-p">
+                Track rental income, monitor occupancy rates, and manage tenant details all from a single dashboard.
+                Automate rent reminders, store important documents, and access financial reports anytime.
+              </p>
+            </div>
+            {/* For Tenants */}
+            <div className="feature-card-1">
+              <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="44" height="44" rx="12" fill="#F1F5F9"/>
+                <path d="M22 15.6283C22.4479 15.1206 23.0397 14.7613 23.6968 14.5982C24.354 14.4351 25.0451 14.4759 25.6785 14.7153C26.3118 14.9547 26.8572 15.3813 27.2421 15.9383C27.627 16.4953 27.8332 17.1563 27.8332 17.8333C27.8332 18.5104 27.627 19.1714 27.2421 19.7284C26.8572 20.2854 26.3118 20.7119 25.6785 20.9513C25.0451 21.1907 24.354 21.2316 23.6968 21.0685C23.0397 20.9054 22.4479 20.5461 22 20.0383M24.5 29.5H14.5V28.6667C14.5 27.3406 15.0268 26.0688 15.9645 25.1311C16.9021 24.1935 18.1739 23.6667 19.5 23.6667C20.8261 23.6667 22.0979 24.1935 23.0355 25.1311C23.9732 26.0688 24.5 27.3406 24.5 28.6667V29.5ZM24.5 29.5H29.5V28.6667C29.5001 27.7889 29.2692 26.9266 28.8304 26.1664C28.3916 25.4062 27.7604 24.7749 27.0003 24.336C26.2402 23.8971 25.3779 23.666 24.5002 23.666C23.6224 23.6659 22.7601 23.897 22 24.3358M22.8333 17.8333C22.8333 18.7174 22.4821 19.5652 21.857 20.1904C21.2319 20.8155 20.3841 21.1667 19.5 21.1667C18.6159 21.1667 17.7681 20.8155 17.143 20.1904C16.5179 19.5652 16.1667 18.7174 16.1667 17.8333C16.1667 16.9493 16.5179 16.1014 17.143 15.4763C17.7681 14.8512 18.6159 14.5 19.5 14.5C20.3841 14.5 21.2319 14.8512 21.857 15.4763C22.4821 16.1014 22.8333 16.9493 22.8333 17.8333Z" stroke="url(#paint0_linear_71_13134)" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                  <linearGradient id="paint0_linear_71_13134" x1="13.2805" y1="23.875" x2="28.8539" y2="24.1252" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#0048FF"/>
+                    <stop offset="1" stop-color="#187EFD"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <h3 className="feature-card-h3">For Tenants</h3>
+              <p className="feature-card-p">
+                Tenants can upload payment proofs, submit maintenance requests, and access lease agreements
+                digitally eliminating unnecessary calls and paperwork.
+              </p>
+            </div>
+            {/* For Managers */}
+            <div className="feature-card-1">
+              <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="44" height="44" rx="12" fill="#E2E8F0"/>
+                <path d="M27.8333 29.5V16.1667C27.8333 15.7246 27.6577 15.3007 27.3452 14.9882C27.0326 14.6756 26.6087 14.5 26.1667 14.5H17.8333C17.3913 14.5 16.9674 14.6756 16.6548 14.9882C16.3423 15.3007 16.1667 15.7246 16.1667 16.1667V29.5M27.8333 29.5H29.5M27.8333 29.5H23.6667M16.1667 29.5H14.5M16.1667 29.5H20.3333M23.6667 29.5V25.3333C23.6667 25.1123 23.5789 24.9004 23.4226 24.7441C23.2663 24.5878 23.0543 24.5 22.8333 24.5H21.1667C20.9457 24.5 20.7337 24.5878 20.5774 24.7441C20.4211 24.9004 20.3333 25.1123 20.3333 25.3333V29.5M23.6667 29.5H20.3333M19.5 17.8333H20.3333M19.5 21.1667H20.3333M23.6667 17.8333H24.5M23.6667 21.1667H24.5" stroke="url(#paint0_linear_71_13141)" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                  <linearGradient id="paint0_linear_71_13141" x1="13.2805" y1="23.875" x2="28.8539" y2="24.1252" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#0048FF"/>
+                    <stop offset="1" stop-color="#187EFD"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <h3 className="feature-card-h3">For Managers</h3>
+              <p className="feature-card-p">
+                Handle multiple properties efficiently with automated renewals, centralized communication, and vendor
+                coordination tools designed to streamline your daily operations.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Everything You Need Section */}
+      <section className="py-20 px-6 bg-[#F4F4F4]">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Everything You Need to Run Your Property Portfolio.</h2>
+              <p className="text-xl text-gray-600">
+                Comprehensive tools designed to meet local regulatory and operational needs, from Ejari compliance to PDC tracking.
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-blue-200 to-blue-100 rounded-2xl h-80 flex items-center justify-center">
+              <Building2 className="w-32 h-32 text-blue-600" />
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Payment Uploads */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                <FileText className="w-5 h-5 text-blue-600" />
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">Payment Uploads</h4>
+              <p className="text-sm text-gray-600 mb-4">Track PDCs, verify payments, and maintain records</p>
+              <div className="flex gap-2">
+                <div className="w-8 h-8 bg-gray-200 rounded"></div>
+                <div className="w-8 h-8 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+            {/* Property Tracking */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <BarChart3 className="w-5 h-5 text-green-600" />
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">Property Tracking</h4>
+              <p className="text-sm text-gray-600 mb-4">Monitor occupancy rates, rental income, and financial health</p>
+              <div className="bg-white rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-2xl font-bold text-gray-900">11,756</span>
+                  <span className="text-green-600 text-sm">+12%</span>
+                </div>
+                <div className="h-16 flex items-end gap-1">
+                  {[30, 50, 40, 70, 55, 80, 65].map((h, i) => (
+                    <div key={i} className="flex-1 bg-blue-400 rounded" style={{ height: `${h}%` }}></div>
+                  ))}
+                </div>
+                <div className="text-xs text-gray-500 mt-2">March</div>
+              </div>
+            </div>
+            {/* Lease Management */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                <FileText className="w-5 h-5 text-purple-600" />
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">Lease Management</h4>
+              <p className="text-sm text-gray-600 mb-4">Automated Ejari-compliant digital leases and renewal alerts</p>
+              <div className="flex gap-2">
+                <div className="w-8 h-8 bg-gray-200 rounded"></div>
+                <div className="w-8 h-8 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+            {/* Maintenance Workflow */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                <Wrench className="w-5 h-5 text-orange-600" />
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">Maintenance Workflow</h4>
+              <p className="text-sm text-gray-600 mb-4">Manage tenant requests to vendor assignment and completion</p>
+              <div className="relative w-20 h-20 mx-auto">
+                <svg className="w-20 h-20 transform -rotate-90">
+                  <circle cx="40" cy="40" r="35" stroke="#e5e7eb" strokeWidth="8" fill="none" />
+                  <circle cx="40" cy="40" r="35" stroke="#f97316" strokeWidth="8" fill="none" strokeDasharray="220" strokeDashoffset="192" />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-xs font-bold text-gray-900">12.5%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-20 px-6 bg-[#F4F4F4]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Simple, Property-Based Pricing</h2>
+            <p className="text-xl text-gray-600">Choose the plan that fits your portfolio</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Starter */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
+              <p className="text-gray-600 mb-6">For single property owners</p>
+              <div className="mb-6">
+                <span className="text-4xl font-bold text-gray-900">AED 99</span>
+                <span className="text-gray-600">/month</span>
+              </div>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  1-3 properties
+                </li>
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Secure Ejari document storage
+                </li>
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Basic financial reports
+                </li>
+              </ul>
+              <button className="w-full border-2 border-blue-600 text-blue-600 py-3 rounded-full hover:bg-blue-50 transition font-medium">
+                Choose Starter
+              </button>
+            </div>
+            {/* Professional */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg border-2 border-blue-600 relative">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                MOST POPULAR
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Professional</h3>
+              <p className="text-gray-600 mb-6">For growing investors</p>
+              <div className="mb-6">
+                <span className="text-4xl font-bold text-gray-900">AED 249</span>
+                <span className="text-gray-600">/month</span>
+              </div>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  4-10 properties
+                </li>
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Maintenance automation
+                </li>
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Automated rent reminders
+                </li>
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  PDC tracking
+                </li>
+              </ul>
+              <button className="w-full bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition font-medium">
+                Choose Professional
+              </button>
+            </div>
+            {/* Enterprise */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
+              <p className="text-gray-600 mb-6">For property managers & agencies</p>
+              <div className="mb-6">
+                <span className="text-4xl font-bold text-gray-900">AED 599</span>
+                <span className="text-gray-600">/month</span>
+              </div>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Unlimited properties
+                </li>
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Multi-user access
+                </li>
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Custom ROI dashboards
+                </li>
+                <li className="flex items-center gap-3 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Dedicated account manager
+                </li>
+              </ul>
+              <button className="w-full border-2 border-blue-600 text-blue-600 py-3 rounded-full hover:bg-blue-50 transition font-medium">
+                Contact Sales
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-6 bg-blue-600">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-bold text-white mb-4">Ready to automate your UAE portfolio?</h2>
+          <p className="text-xl text-blue-100 mb-8">
+            Join hundreds of landlords and property managers who are saving time, reducing errors, and scaling faster with PropManager.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-white text-blue-600 px-8 py-4 rounded-full hover:bg-gray-100 transition font-medium text-lg">
+              Start your 14-Day Free Trial
+            </button>
+            <button className="border-2 border-white text-white px-8 py-4 rounded-full hover:bg-blue-700 transition font-medium text-lg">
+              Contact Us
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-16 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-12 mb-12">
+            <div>
+              <h4 className="text-white font-bold mb-4">Company</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="hover:text-white transition">Features</a></li>
+                <li><a href="#" className="hover:text-white transition">Pricing</a></li>
+                <li><a href="#" className="hover:text-white transition">About</a></li>
+              </ul>
+              <h4 className="text-white font-bold mb-4 mt-8">Legal</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="hover:text-white transition">Terms of Use</a></li>
+                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
+              </ul>
+            </div>
+            <div className="md:col-span-2">
+              <h3 className="text-2xl font-bold text-white mb-4">PropManager</h3>
+              <p className="text-sm leading-relaxed max-w-md">
+                The all-in-one property management solution designed for the UAE market.
+              </p>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex gap-4">
+              <a href="#" className="hover:text-white transition">
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              <a href="#" className="hover:text-white transition">
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </a>
+              <a href="#" className="hover:text-white transition">
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+              </a>
+            </div>
+            <p className="text-sm">&copy; 2024 PropManager. All Rights Reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+export default App
