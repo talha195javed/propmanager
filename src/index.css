@@ -23,6 +23,30 @@ body {
   font-weight: 400;
   line-height: 150%; /* 33px */
   padding: 5% 0;
+  text-align: justify;
+}
+
+.herosection-p3{
+  color: var(--Slate-700, #334155);
+  font-family: Satoshi;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 33px */
+  padding: 1% 0;
+  text-align: justify;
+}
+
+.herosection-p4{
+  color: var(--Slate-700, #334155);
+  font-family: Satoshi;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 33px */
+  padding-top: 3%;
+  padding-bottom:1%;
+  text-align: justify;
 }
 
 .herosection-p2{
@@ -246,4 +270,104 @@ body {
 
 .footer-bottom {
   border-top: 1px solid var(--Neutral-70, #606060);
+}
+
+.feature-hero {
+  padding: 123.5px 254px 123.5px 255px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 44px;
+  background: #FFF;
+}
+
+.feature-hero-h1 {
+  color: #101010;
+  text-align: center;
+  font-family: Satoshi;
+  font-size: 62px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 93px */
+}
+
+.feature-hero-p {
+  color: var(--Slate-700, #334155);
+  text-align: center;
+  font-family: Satoshi;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 33px */
+  padding-top: 2%;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.feature-grid-h4 {
+  color: var(--Slate-800, #1E293B);
+  font-family: Satoshi;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  font-weight: bold;
+  line-height: 37.333px; /* 155.556% */
+}
+
+.faq-h3 {
+  color: #0F1D1F;
+  font-family: Satoshi;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-weight: bold;
+}
+
+.faq-p {
+  color: #3D3D47;
+  font-family: Satoshi;
+  font-size: 19px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 33px; /* 173.684% */
+}
+
+.faq-button {
+  display: flex;
+  padding: 32px 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 15px;
+  border: 1px solid #E6E6E6;
+  background: #FAFAFA;
+}
+
+.aboutheroimage {
+  align-content: end;
+}
+
+.aboutimage {
+  align-content: center;
+  align-items: center;
+}
+
+.team-desig {
+  color: var(--Black, #12141D);
+  text-align: right;
+  font-family: Satoshi;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 146.667% */
+}
+
+.team-name {
+  color: var(--gray-900, #18181B);
+  font-family: Satoshi;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px; /* 175% */
 }
