@@ -136,79 +136,19 @@ function App() {
 
       {/* Everything You Need Section */}
       <section className="py-20 px-6 bg-[#F4F4F4]">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+        <div className="bg-white ml-24 mr-24 rounded-2xl shadow-xl p-20 items-center">
+          <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Everything You Need to Run Your Property Portfolio.</h2>
-              <p className="text-xl text-gray-600">
+              <h2 className="everything-h2">Everything You Need to Run Your Property Portfolio.</h2>
+              <p className="everything-p">
                 Comprehensive tools designed to meet local regulatory and operational needs, from Ejari compliance to PDC tracking.
               </p>
-            </div>
-            <div className="bg-gradient-to-br from-blue-200 to-blue-100 rounded-2xl h-80 flex items-center justify-center">
-              <Building2 className="w-32 h-32 text-blue-600" />
-            </div>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Payment Uploads */}
-            <div className="bg-gray-50 rounded-xl p-6">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <FileText className="w-5 h-5 text-blue-600" />
-              </div>
-              <h4 className="font-bold text-gray-900 mb-2">Payment Uploads</h4>
-              <p className="text-sm text-gray-600 mb-4">Track PDCs, verify payments, and maintain records</p>
-              <div className="flex gap-2">
-                <div className="w-8 h-8 bg-gray-200 rounded"></div>
-                <div className="w-8 h-8 bg-gray-200 rounded"></div>
+              <div className="bg-white rounded-xl pt-10">
+                <img src="/everything-main.svg" alt="Hero Section" className="everything-main" />
               </div>
             </div>
-            {/* Property Tracking */}
-            <div className="bg-gray-50 rounded-xl p-6">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <BarChart3 className="w-5 h-5 text-green-600" />
-              </div>
-              <h4 className="font-bold text-gray-900 mb-2">Property Tracking</h4>
-              <p className="text-sm text-gray-600 mb-4">Monitor occupancy rates, rental income, and financial health</p>
-              <div className="bg-white rounded-lg p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-2xl font-bold text-gray-900">11,756</span>
-                  <span className="text-green-600 text-sm">+12%</span>
-                </div>
-                <div className="h-16 flex items-end gap-1">
-                  {[30, 50, 40, 70, 55, 80, 65].map((h, i) => (
-                    <div key={i} className="flex-1 bg-blue-400 rounded" style={{ height: `${h}%` }}></div>
-                  ))}
-                </div>
-                <div className="text-xs text-gray-500 mt-2">March</div>
-              </div>
-            </div>
-            {/* Lease Management */}
-            <div className="bg-gray-50 rounded-xl p-6">
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                <FileText className="w-5 h-5 text-purple-600" />
-              </div>
-              <h4 className="font-bold text-gray-900 mb-2">Lease Management</h4>
-              <p className="text-sm text-gray-600 mb-4">Automated Ejari-compliant digital leases and renewal alerts</p>
-              <div className="flex gap-2">
-                <div className="w-8 h-8 bg-gray-200 rounded"></div>
-                <div className="w-8 h-8 bg-gray-200 rounded"></div>
-              </div>
-            </div>
-            {/* Maintenance Workflow */}
-            <div className="bg-gray-50 rounded-xl p-6">
-              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                <Wrench className="w-5 h-5 text-orange-600" />
-              </div>
-              <h4 className="font-bold text-gray-900 mb-2">Maintenance Workflow</h4>
-              <p className="text-sm text-gray-600 mb-4">Manage tenant requests to vendor assignment and completion</p>
-              <div className="relative w-20 h-20 mx-auto">
-                <svg className="w-20 h-20 transform -rotate-90">
-                  <circle cx="40" cy="40" r="35" stroke="#e5e7eb" strokeWidth="8" fill="none" />
-                  <circle cx="40" cy="40" r="35" stroke="#f97316" strokeWidth="8" fill="none" strokeDasharray="220" strokeDashoffset="192" />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-xs font-bold text-gray-900">12.5%</span>
-                </div>
-              </div>
+            <div>
+                <img src="/evrything.svg" alt="Hero Section" className="" />
             </div>
           </div>
         </div>
@@ -216,12 +156,12 @@ function App() {
 
       {/* Pricing Section */}
       <section id="pricing" className="py-20 px-6 bg-[#F4F4F4]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Simple, Property-Based Pricing</h2>
-            <p className="text-xl text-gray-600">Choose the plan that fits your portfolio</p>
+        <div className="bg-white ml-24 mr-24 rounded-2xl shadow-xl p-20 items-center">
+          <div className="mb-16 grid md:grid-cols-2 gap-20">
+            <h2 className="pricing-h2">Simple, Property-Based Pricing</h2>
+            <p className="pricing-p">Scale your plan as your portfolio grows. No hidden fees. No surprises.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="pricing-cards">
             {/* Starter */}
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <h3 className="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
@@ -316,48 +256,94 @@ function App() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6 bg-blue-600">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">Ready to automate your UAE portfolio?</h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Join hundreds of landlords and property managers who are saving time, reducing errors, and scaling faster with PropManager.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-full hover:bg-gray-100 transition font-medium text-lg">
-              Start your 14-Day Free Trial
-            </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-full hover:bg-blue-700 transition font-medium text-lg">
-              Contact Us
-            </button>
+      <section className="py-20 px-6">
+        <div className="cta ml-24 mr-24 rounded-2xl shadow-xl p-20 items-center">
+          <h2 className="cta-h2">Ready to automate your UAE portfolio?</h2>
+          <div className="flex flex-col md:flex-row items-center w-full gap-6">
+            {/* Left 50% */}
+            <div className="w-full md:w-1/2">
+              <p className="cta-p">
+                Join hundreds of landlords and property managers who are saving time,
+                reducing errors, and scaling faster with PropManager.
+              </p>
+            </div>
+
+            {/* Right 50% */}
+            <div className="w-full md:w-1/2 flex justify-end gap-4">
+              <button className="cta-button1">
+                <span style={{color:"#0048FF"}}>Start your 14-Day Free Trial</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                      d="M6 19L19 6M6.52 6H19V18.48"
+                      stroke="url(#paint0_linear_71_13114)"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                  />
+                  <defs>
+                    <linearGradient id="paint0_linear_71_13114">
+                      <stop stopColor="#0048FF"/>
+                      <stop offset="1" stopColor="#187EFD"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </button>
+
+              <button className="border-2 border-white text-white px-8 py-4 rounded-full hover:bg-blue-700 transition font-medium text-lg flex items-center gap-2">
+                Contact Us
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                      d="M3 5C3 3.89543 3.89543 3 5 3H8.27924C8.70967 3 9.09181 3.27543 9.22792 3.68377L10.7257 8.17721C10.8831 8.64932 10.6694 9.16531 10.2243 9.38787L7.96701 10.5165C9.06925 12.9612 11.0388 14.9308 13.4835 16.033L14.6121 13.7757C14.8347 13.3306 15.3507 13.1169 15.8228 13.2743L20.3162 14.7721C20.7246 14.9082 21 15.2903 21 15.7208V19C21 20.1046 20.1046 21 19 21H18C9.71573 21 3 14.2843 3 6V5Z"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-16 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-12 mb-12">
-            <div>
-              <h4 className="text-white font-bold mb-4">Company</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-white transition">Features</a></li>
-                <li><a href="#" className="hover:text-white transition">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition">About</a></li>
-              </ul>
-              <h4 className="text-white font-bold mb-4 mt-8">Legal</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-white transition">Terms of Use</a></li>
-                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-              </ul>
+      <footer className="py-20 px-6">
+        <div className="bg-gray-900 text-gray-400 ml-24 mr-24 rounded-2xl shadow-xl p-20 items-center">
+          <div className="grid md:grid-cols-3 gap-12 mb-12 items-start">
+
+            {/* Left: Company + Legal */}
+            <div className="flex gap-12">
+              <div>
+                <h4 className="footer-h4">Company</h4>
+                <ul className="space-y-2">
+                  <li><a href="#" className="footer-li">Features</a></li>
+                  <li><a href="#" className="footer-li">Pricing</a></li>
+                  <li><a href="#" className="footer-li">About</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="footer-h4">Legal</h4>
+                <ul className="space-y-2">
+                  <li><a href="#" className="footer-li">Terms of Use</a></li>
+                  <li><a href="#" className="footer-li">Privacy Policy</a></li>
+                </ul>
+              </div>
             </div>
-            <div className="md:col-span-2">
-              <h3 className="text-2xl font-bold text-white mb-4">PropManager</h3>
-              <p className="text-sm leading-relaxed max-w-md">
+
+            {/* Middle spacer (optional but helps structure) */}
+            <div></div>
+
+            {/* Right: PropManager */}
+            <div className=" md:ml-auto">
+              <h3 className="footer-h3">PropManager</h3>
+              <p className="footer-p">
                 The all-in-one property management solution designed for the UAE market.
               </p>
             </div>
+
           </div>
-          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="footer-bottom pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex gap-4">
               <a href="#" className="hover:text-white transition">
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
