@@ -99,10 +99,10 @@ function About() {
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <a href="#login" className="text-gray-600 hover:text-gray-900 transition">Log in</a>
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition font-medium">
+            <Link to="/login" className="text-gray-600 hover:text-gray-900 transition">Log in</Link>
+            <Link to="/signup" className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition font-medium">
               Start Free Trial
-            </button>
+            </Link>
           </div>
           <button className="md:hidden">
             <Menu className="w-6 h-6" />
