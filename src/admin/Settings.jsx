@@ -1,238 +1,281 @@
-import { useState } from 'react'
-import { User, Bell, Shield, Database } from 'lucide-react'
-import { useAuth } from '../AuthContext'
+import { useState, useRef } from 'react'
+import { UserRound, Lock, Layers, CreditCard, X, Info } from 'lucide-react'
+import { API, authHeader } from './leaseUtils'
+import { useAuth } from '@/AuthContext'
+import SettingsRoles from './SettingsRoles'
+import SettingsBilling from './SettingsBilling'
+
+const NAV = [
+  { key: 'general', label: 'General information', icon: UserRound },
+  { key: 'security', label: 'Security', icon: Lock },
+  { key: 'roles', label: 'Roles and Permissions', icon: Layers },
+  { key: 'billing', label: 'Billing', icon: CreditCard },
+]
 
 function Settings() {
-  const [activeTab, setActiveTab] = useState('profile')
-  const { user } = useAuth()
+  const [section, setSection] = useState('general')
+  const [toast, setToast] = useState('')
 
-  const tabs = [
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'security', label: 'Security', icon: Shield },
-    { id: 'database', label: 'Database', icon: Database }
-  ]
+  const flash = (msg) => {
+    setToast(msg)
+    setTimeout(() => setToast(''), 4000)
+  }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-600">Manage your account and preferences</p>
-      </div>
+    <div className="-m-4 -mt-2">
+      {toast && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 bg-white border border-gray-200 shadow-lg rounded-lg px-4 py-3 text-sm text-gray-700">
+          <Info className="w-4 h-4 text-blue-600" />
+          {toast}
+          <button onClick={() => setToast('')} className="text-gray-400 hover:text-gray-600">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-        {/* Tabs */}
-        <div className="border-b border-gray-200">
-          <nav className="flex space-x-8 px-6">
-            {tabs.map((tab) => {
-              const Icon = tab.icon
+      <div className="flex min-h-[calc(100vh-7rem)]">
+        {/* Sub-nav */}
+        <aside className="w-72 border-r border-gray-200 p-4 shrink-0">
+          <nav className="space-y-1">
+            {NAV.map((n) => {
+              const Icon = n.icon
+              const active = section === n.key
               return (
                 <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition ${
-                    activeTab === tab.id
-                      ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  key={n.key}
+                  onClick={() => setSection(n.key)}
+                  className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm ${
+                    active ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  {tab.label}
+                  {n.label}
                 </button>
               )
             })}
           </nav>
+        </aside>
+
+        {/* Content */}
+        <section className="flex-1 p-8">
+          {section === 'general' && <GeneralInformation flash={flash} />}
+          {section === 'security' && <Security flash={flash} />}
+          {section === 'roles' && <SettingsRoles flash={flash} />}
+          {section === 'billing' && <SettingsBilling flash={flash} />}
+        </section>
+      </div>
+    </div>
+  )
+}
+
+/* ---------- General information ---------- */
+
+const inputClass =
+  'px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 text-sm text-right focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none'
+
+function GeneralInformation({ flash }) {
+  const { user, updateUser } = useAuth()
+  const fileRef = useRef(null)
+  const [form, setForm] = useState({
+    fullName: user?.fullName || '',
+    emiratesId: user?.emiratesId || '',
+    phone: user?.phone || '',
+    avatarUrl: user?.avatarUrl || '',
+    dob: user?.dob ? user.dob.slice(0, 10) : '',
+  })
+  const [saving, setSaving] = useState(false)
+  const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
+
+  const handleAvatar = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setForm((f) => ({ ...f, avatarUrl: reader.result }))
+    reader.readAsDataURL(file)
+  }
+
+  const save = async () => {
+    setSaving(true)
+    try {
+      const res = await fetch(`${API}/auth/profile`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', ...authHeader() },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error('Failed to save')
+      const updated = await res.json()
+      updateUser(updated)
+      flash('Profile updated.')
+    } catch (err) {
+      flash(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="max-w-3xl">
+      <h1 className="text-xl font-semibold text-gray-900">Profile</h1>
+      <p className="text-sm text-gray-500 border-b border-gray-100 pb-4 mb-2">
+        Edit all your basic information
+      </p>
+
+      <Row label="Profile picture">
+        <button onClick={() => fileRef.current?.click()} className="block">
+          <div className="w-9 h-9 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center text-sm text-gray-500">
+            {form.avatarUrl ? (
+              <img src={form.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+            ) : (
+              (user?.fullName || 'U').charAt(0).toUpperCase()
+            )}
+          </div>
+        </button>
+        <input ref={fileRef} type="file" accept="image/*" hidden onChange={handleAvatar} />
+      </Row>
+
+      <Row label="Email">
+        <span className="text-sm text-gray-900">{user?.email}</span>
+      </Row>
+
+      <Row label="Full name">
+        <input value={form.fullName} onChange={set('fullName')} className={`${inputClass} w-56`} />
+      </Row>
+
+      <Row label="Emirates ID">
+        <input value={form.emiratesId} onChange={set('emiratesId')} className={`${inputClass} w-56`} />
+      </Row>
+
+      <Row label="Phone">
+        <input value={form.phone} onChange={set('phone')} className={`${inputClass} w-56`} />
+      </Row>
+
+      <div className="flex justify-end mt-6">
+        <button
+          onClick={save}
+          disabled={saving}
+          className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition disabled:opacity-60"
+        >
+          {saving ? 'Saving...' : 'Save changes'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function Row({ label, children }) {
+  return (
+    <div className="flex items-center justify-between py-4 border-b border-gray-100">
+      <span className="text-sm text-gray-700">{label}</span>
+      <div>{children}</div>
+    </div>
+  )
+}
+
+/* ---------- Security ---------- */
+
+function Security({ flash }) {
+  const [showModal, setShowModal] = useState(false)
+  return (
+    <div className="max-w-3xl">
+      <h1 className="text-xl font-semibold text-gray-900">Security</h1>
+      <p className="text-sm text-gray-500 border-b border-gray-100 pb-4 mb-2">
+        Update your password securely
+      </p>
+      <div className="flex items-center justify-between py-4">
+        <span className="text-sm font-medium text-gray-900">Password</span>
+        <button
+          onClick={() => setShowModal(true)}
+          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+        >
+          Change password
+        </button>
+      </div>
+      {showModal && <ChangePasswordModal onClose={() => setShowModal(false)} flash={flash} />}
+    </div>
+  )
+}
+
+const pwInput =
+  'w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none'
+
+function ChangePasswordModal({ onClose, flash }) {
+  const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirm: '' })
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+  const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
+
+  const submit = async () => {
+    if (!form.currentPassword || !form.newPassword) return setError('All fields are required.')
+    if (form.newPassword !== form.confirm) return setError('Passwords do not match.')
+    setError('')
+    setSaving(true)
+    try {
+      const res = await fetch(`${API}/auth/change-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...authHeader() },
+        body: JSON.stringify({
+          currentPassword: form.currentPassword,
+          newPassword: form.newPassword,
+        }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.message || 'Failed to change password')
+      flash('Password updated successfully.')
+      onClose()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-base font-semibold text-gray-900">Change password</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        {/* Tab Content */}
-        <div className="p-6">
-          {activeTab === 'profile' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-6">
-                <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-3xl font-bold text-blue-600">
-                    {user?.fullName?.charAt(0) || 'U'}
-                  </span>
-                </div>
-                <div>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm">
-                    Change Photo
-                  </button>
-                  <p className="text-sm text-gray-500 mt-2">JPG, PNG or GIF. Max size 2MB</p>
-                </div>
-              </div>
+        {error && (
+          <div className="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-2 text-sm text-red-600">
+            {error}
+          </div>
+        )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                  <input
-                    type="text"
-                    defaultValue={user?.fullName}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                  <input
-                    type="email"
-                    defaultValue={user?.email}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    defaultValue={user?.phone}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                  <input
-                    type="text"
-                    defaultValue={user?.role}
-                    disabled
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
-                  />
-                </div>
-              </div>
+        <div className="space-y-4">
+          <Field label="Current password">
+            <input type="password" value={form.currentPassword} onChange={set('currentPassword')} className={pwInput} />
+          </Field>
+          <Field label="New password">
+            <input type="password" value={form.newPassword} onChange={set('newPassword')} className={pwInput} />
+          </Field>
+          <Field label="Confirm password">
+            <input type="password" value={form.confirm} onChange={set('confirm')} className={pwInput} />
+          </Field>
+        </div>
 
-              <div className="flex justify-end">
-                <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'notifications' && (
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium text-gray-900">Payment Reminders</h3>
-                    <p className="text-sm text-gray-500">Get notified when rent payments are due</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" defaultChecked className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium text-gray-900">Lease Expiry Alerts</h3>
-                    <p className="text-sm text-gray-500">Get notified before leases expire</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" defaultChecked className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium text-gray-900">Maintenance Requests</h3>
-                    <p className="text-sm text-gray-500">Get notified when new maintenance requests are submitted</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" defaultChecked className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium text-gray-900">Email Notifications</h3>
-                    <p className="text-sm text-gray-500">Receive notifications via email</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" defaultChecked className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'security' && (
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-medium text-gray-900 mb-4">Change Password</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-                    <input
-                      type="password"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-                    <input
-                      type="password"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
-                    <input
-                      type="password"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
-                  </div>
-                  <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    Update Password
-                  </button>
-                </div>
-              </div>
-
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="font-medium text-gray-900 mb-4">Two-Factor Authentication</h3>
-                <p className="text-sm text-gray-500 mb-4">Add an extra layer of security to your account</p>
-                <button className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                  Enable 2FA
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'database' && (
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-medium text-gray-900 mb-4">Database Information</h3>
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Database Name:</span>
-                    <span className="font-medium text-gray-900">propmanager</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Host:</span>
-                    <span className="font-medium text-gray-900">localhost</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Connection:</span>
-                    <span className="text-green-600 font-medium">Connected</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="font-medium text-gray-900 mb-4">Data Management</h3>
-                <div className="space-y-4">
-                  <button className="w-full px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-left">
-                    Export All Data
-                  </button>
-                  <button className="w-full px-6 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition text-left">
-                    Reset Database
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={submit}
+            disabled={saving}
+            className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition disabled:opacity-60"
+          >
+            {saving ? 'Saving...' : 'Submit'}
+          </button>
         </div>
       </div>
+    </div>
+  )
+}
+
+function Field({ label, children }) {
+  return (
+    <div className="grid grid-cols-[160px_1fr] items-center gap-4">
+      <label className="text-sm text-gray-700">{label}</label>
+      {children}
     </div>
   )
 }

@@ -56,6 +56,15 @@ export function AuthProvider({ children }) {
     setStatus('authenticated')
   }
 
+  // Merge partial fields into the current user (after profile/billing edits)
+  const updateUser = (partial) => {
+    setUser((prev) => {
+      const next = { ...prev, ...partial }
+      localStorage.setItem('user', JSON.stringify(next))
+      return next
+    })
+  }
+
   const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
@@ -64,7 +73,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ status, user, login, logout }}>
+    <AuthContext.Provider value={{ status, user, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

@@ -124,7 +124,6 @@ function About() {
             <p className="herosection-p3">
               Built specifically for the UAE real estate ecosystem—by experts who understand its complexities, regulations, and opportunities.
             </p>
-
           </div>
           <div className="aboutheroimage flex justify-center items-center">
           <img src="/aboutherosection.svg" alt="Hero Section" className=" " />

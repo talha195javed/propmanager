@@ -1,28 +1,40 @@
 import { useState, useEffect } from 'react'
-import { Users, Plus, Search, Edit, Trash2, Filter } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Plus, Search, Info, X, Users } from 'lucide-react'
+import { API, authHeader, money, formatMedium, computeLeaseEnd, initials } from './leaseUtils'
+import TenantFormModal from './TenantFormModal'
+
+export function TenantStatusBadge({ status }) {
+  const map = {
+    active: 'bg-green-50 text-green-700 border-green-200',
+    pending: 'bg-amber-50 text-amber-700 border-amber-200',
+    inactive: 'bg-gray-100 text-gray-600 border-gray-200',
+  }
+  const label = status ? status.charAt(0).toUpperCase() + status.slice(1) : '—'
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
+        map[status] || map.inactive
+      }`}
+    >
+      <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
+      {label}
+    </span>
+  )
+}
 
 function Tenants() {
+  const navigate = useNavigate()
   const [tenants, setTenants] = useState([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-
-  useEffect(() => {
-    fetchTenants()
-  }, [])
+  const [search, setSearch] = useState('')
+  const [toast, setToast] = useState('')
 
   const fetchTenants = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:5001/api/tenants', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      if (response.ok) {
-        const data = await response.json()
-        setTenants(data)
-      }
+      const res = await fetch(`${API}/tenants`, { headers: authHeader() })
+      if (res.ok) setTenants(await res.json())
     } catch (error) {
       console.error('Error fetching tenants:', error)
     } finally {
@@ -30,209 +42,131 @@ function Tenants() {
     }
   }
 
-  const filteredTenants = tenants.filter(tenant =>
-    tenant.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    tenant.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    fetchTenants()
+  }, [])
+
+  useEffect(() => {
+    if (!toast) return
+    const t = setTimeout(() => setToast(''), 4000)
+    return () => clearTimeout(t)
+  }, [toast])
+
+  const filtered = tenants.filter((t) =>
+    t.full_name?.toLowerCase().includes(search.toLowerCase())
   )
 
+  const unitLabel = (t) => {
+    if (!t.property_name) return '—'
+    return t.unit_name ? `${t.property_name} (${t.unit_name})` : t.property_name
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tenants</h1>
-          <p className="text-gray-600">Manage your tenant information</p>
+    <div className="space-y-4">
+      {toast && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 bg-white border border-gray-200 shadow-lg rounded-lg px-4 py-3 text-sm text-gray-700">
+          <Info className="w-4 h-4 text-blue-600" />
+          {toast}
+          <button onClick={() => setToast('')} className="text-gray-400 hover:text-gray-600">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {/* Sub-header */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <p className="text-sm text-gray-500 whitespace-nowrap">{tenants.length} tenant(s) in List</p>
+          {tenants.length > 0 && (
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search for tenant name"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-72 pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              />
+            </div>
+          )}
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          className="flex items-center gap-2 bg-blue-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-700 transition whitespace-nowrap"
         >
-          <Plus className="w-5 h-5" />
-          Add Tenant
+          <Plus className="w-4 h-4" />
+          Add tenant
         </button>
       </div>
 
-      {/* Search and Filter */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search tenants..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-          />
-        </div>
-        <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-          <Filter className="w-5 h-5" />
-          Filter
-        </button>
-      </div>
-
-      {/* Tenants Table */}
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-        {loading ? (
-          <div className="p-8 text-center text-gray-500">Loading tenants...</div>
-        ) : filteredTenants.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            <Users className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <p>No tenants found</p>
+      {loading ? (
+        <div className="p-12 text-center text-gray-500">Loading tenants...</div>
+      ) : tenants.length === 0 ? (
+        <button
+          onClick={() => setShowModal(true)}
+          className="w-full flex flex-col items-center justify-center py-32 text-center"
+        >
+          <div className="w-20 h-20 rounded-2xl bg-white shadow-md flex items-center justify-center mb-5">
+            <Users className="w-9 h-9 text-blue-600" />
           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tenant</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lease Period</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rent</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredTenants.map((tenant) => (
-                  <tr key={tenant.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-medium text-gray-900">{tenant.full_name}</p>
-                        <p className="text-sm text-gray-500">{tenant.email}</p>
-                        <p className="text-sm text-gray-500">{tenant.phone}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-gray-700">Property #{tenant.property_id}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-700">
-                        <p>{tenant.lease_start_date}</p>
-                        <p className="text-gray-500">to {tenant.lease_end_date}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm font-medium text-gray-900">
-                        AED {tenant.rent_amount?.toLocaleString()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        tenant.status === 'active' 
-                          ? 'bg-green-100 text-green-700' 
-                          : tenant.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : 'bg-gray-100 text-gray-700'
-                      }`}>
-                        {tenant.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+          <p className="font-semibold text-gray-900">No tenants added yet</p>
+          <p className="text-sm text-gray-500 mt-1">Click here to create tenant</p>
+        </button>
+      ) : (
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <table className="w-full">
+            <thead className="border-b border-gray-200">
+              <tr>
+                {['Tenant', 'Unit', 'Lease', 'Phone number', 'Current rent', 'Lease end', 'Status'].map((h) => (
+                  <th key={h} className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                    {h}
+                  </th>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Add Tenant Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">Add New Tenant</h2>
-            </div>
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  placeholder="John Doe"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                  <input
-                    type="email"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder="john@example.com"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder="+971 XX XXX XXXX"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Emirates ID</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  placeholder="784-XXXX-XXXXXXX-X"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Property</label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                  <option value="">Select Property</option>
-                  <option value="1">Dubai Marina Apartment</option>
-                  <option value="2">Downtown Villa</option>
-                </select>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Lease Start Date</label>
-                  <input
-                    type="date"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Lease End Date</label>
-                  <input
-                    type="date"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Monthly Rent (AED)</label>
-                <input
-                  type="number"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  placeholder="8500"
-                />
-              </div>
-            </div>
-            <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-              >
-                Cancel
-              </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                Add Tenant
-              </button>
-            </div>
-          </div>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {filtered.map((t) => (
+                <tr
+                  key={t.id}
+                  onClick={() => navigate(`/admin/tenants/${t.id}`)}
+                  className="hover:bg-gray-50 cursor-pointer"
+                >
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-medium">
+                        {initials(t.full_name)}
+                      </div>
+                      <span className="text-sm text-gray-900">{t.full_name || '—'}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{unitLabel(t)}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{t.email || '—'}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{t.phone || '—'}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    {t.current_rent != null ? money(t.current_rent) : '-'}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    {t.lease_start ? formatMedium(computeLeaseEnd(t.lease_start, t.lease_length)) : '-'}
+                  </td>
+                  <td className="px-6 py-4">
+                    <TenantStatusBadge status={t.status} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+      )}
+
+      {showModal && (
+        <TenantFormModal
+          onClose={() => setShowModal(false)}
+          onSaved={() => {
+            setShowModal(false)
+            setToast('Tenant has been added successfully.')
+            fetchTenants()
+          }}
+        />
       )}
     </div>
   )

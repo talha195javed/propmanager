@@ -1,28 +1,48 @@
 import { useState, useEffect } from 'react'
-import { Building2, Plus, Search, Edit, Trash2, Filter } from 'lucide-react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Plus, Info, X } from 'lucide-react'
+
+const API = 'http://localhost:5001/api'
+
+// Solid-blue chevron brand mark used across the property screens.
+export function PropertyMark({ className = 'w-6 h-6' }) {
+  return (
+    <svg className={className} viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M6.49513 22.9912L14.5 15L22.4905 22.9912L22.4905 9.99102L14.5 5L6.49275 9.99095L6.49513 22.9912Z"
+        fill="#2563EB"
+      />
+    </svg>
+  )
+}
 
 function Properties() {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [properties, setProperties] = useState([])
   const [loading, setLoading] = useState(true)
-  const [showModal, setShowModal] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [toast, setToast] = useState(location.state?.created ? 'Great job! Property has been created.' : '')
 
   useEffect(() => {
     fetchProperties()
   }, [])
 
+  // Clear the one-time "created" navigation state so a refresh doesn't re-toast.
+  useEffect(() => {
+    if (location.state?.created) {
+      window.history.replaceState({}, '')
+      const t = setTimeout(() => setToast(''), 4000)
+      return () => clearTimeout(t)
+    }
+  }, [location.state])
+
   const fetchProperties = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:5001/api/properties', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await fetch(`${API}/properties`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
-      if (response.ok) {
-        const data = await response.json()
-        setProperties(data)
-      }
+      if (response.ok) setProperties(await response.json())
     } catch (error) {
       console.error('Error fetching properties:', error)
     } finally {
@@ -30,206 +50,91 @@ function Properties() {
     }
   }
 
-  const filteredProperties = properties.filter(property =>
-    property.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    property.address?.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Properties</h1>
-          <p className="text-gray-600">Manage your property portfolio</p>
+    <div className="space-y-4">
+      {toast && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 bg-white border border-gray-200 shadow-lg rounded-lg px-4 py-3 text-sm text-gray-700">
+          <Info className="w-4 h-4 text-blue-600" />
+          {toast}
+          <button onClick={() => setToast('')} className="text-gray-400 hover:text-gray-600">
+            <X className="w-4 h-4" />
+          </button>
         </div>
+      )}
+
+      {/* Sub-header */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-500">{properties.length} property(s) in List</p>
         <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          onClick={() => navigate('/admin/properties/new')}
+          className="flex items-center gap-2 bg-blue-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-700 transition"
         >
-          <Plus className="w-5 h-5" />
-          Add Property
+          <Plus className="w-4 h-4" />
+          Add property
         </button>
       </div>
 
-      {/* Search and Filter */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search properties..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-          />
-        </div>
-        <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-          <Filter className="w-5 h-5" />
-          Filter
+      {loading ? (
+        <div className="p-12 text-center text-gray-500">Loading properties...</div>
+      ) : properties.length === 0 ? (
+        // Empty state
+        <button
+          onClick={() => navigate('/admin/properties/new')}
+          className="w-full flex flex-col items-center justify-center py-32 text-center"
+        >
+          <div className="w-20 h-20 rounded-2xl bg-white shadow-md flex items-center justify-center mb-5">
+            <PropertyMark className="w-9 h-9" />
+          </div>
+          <p className="font-semibold text-gray-900">Create a Property</p>
+          <p className="text-sm text-gray-500 mt-1">Click here to create your first property</p>
         </button>
-      </div>
-
-      {/* Properties Table */}
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-        {loading ? (
-          <div className="p-8 text-center text-gray-500">Loading properties...</div>
-        ) : filteredProperties.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            <Building2 className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <p>No properties found</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rent</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredProperties.map((property) => (
-                  <tr key={property.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-medium text-gray-900">{property.title}</p>
-                        <p className="text-sm text-gray-500">{property.address}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-gray-700 capitalize">{property.type}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm font-medium text-gray-900">
-                        AED {property.rent_amount?.toLocaleString()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        property.status === 'occupied' 
-                          ? 'bg-green-100 text-green-700' 
-                          : property.status === 'vacant'
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'bg-orange-100 text-orange-700'
-                      }`}>
-                        {property.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Add Property Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">Add New Property</h2>
-            </div>
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Property Title</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  placeholder="e.g., Dubai Marina Apartment"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  placeholder="Full address"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder="Dubai"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                    <option value="apartment">Apartment</option>
-                    <option value="villa">Villa</option>
-                    <option value="townhouse">Townhouse</option>
-                    <option value="commercial">Commercial</option>
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
-                  <input
-                    type="number"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder="2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
-                  <input
-                    type="number"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder="2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Area (sqft)</label>
-                  <input
-                    type="number"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder="1200"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Monthly Rent (AED)</label>
-                <input
-                  type="number"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  placeholder="8500"
-                />
-              </div>
-            </div>
-            <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-              >
-                Cancel
-              </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                Add Property
-              </button>
-            </div>
-          </div>
+      ) : (
+        // Property cards
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {properties.map((p) => (
+            <PropertyCard key={p.id} property={p} onClick={() => navigate(`/admin/properties/${p.id}`)} />
+          ))}
         </div>
       )}
     </div>
+  )
+}
+
+function PropertyCard({ property, onClick }) {
+  const units = property.units_count ?? 0
+  const occupied = property.occupied_count ?? 0
+  const occupancy = units > 0 ? Math.round((occupied / units) * 100) : 0
+  const place = [property.city, property.emirate].filter(Boolean).join(', ') || property.address
+
+  return (
+    <button
+      onClick={onClick}
+      className="text-left bg-white rounded-xl border border-gray-200 p-3 hover:shadow-md transition flex gap-4"
+    >
+      <div className="w-28 h-28 rounded-lg bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center">
+        {property.image_url ? (
+          <img src={property.image_url} alt={property.title} className="w-full h-full object-cover" />
+        ) : (
+          <PropertyMark className="w-8 h-8 opacity-40" />
+        )}
+      </div>
+      <div className="flex-1 min-w-0 py-1">
+        <p className="font-semibold text-gray-900 truncate">{property.title}</p>
+        <p className="text-sm text-gray-500 truncate">{place}</p>
+        <div className="mt-3 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-full bg-blue-600" style={{ width: `${occupancy}%` }} />
+        </div>
+        <p className="text-xs text-gray-500 mt-1.5">
+          Occupancy: <span className="font-semibold text-gray-700">{occupancy}%</span>
+        </p>
+        <div className="mt-3 flex items-center justify-between bg-gray-50 rounded-md px-3 py-2 text-xs text-gray-500">
+          <span>--</span>
+          <span>
+            Units: <span className="font-semibold text-gray-700">{units}</span>
+          </span>
+        </div>
+      </div>
+    </button>
   )
 }
 

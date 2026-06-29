@@ -112,7 +112,9 @@ router.get('/me', async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     const [users] = await pool.execute(
-      'SELECT id, email, full_name, phone, role, created_at FROM users WHERE id = ?',
+      `SELECT id, email, full_name, phone, role, emirates_id, dob, avatar_url,
+              plan, billing_cycle, plan_started, created_at
+       FROM users WHERE id = ?`,
       [decoded.userId]
     );
 
@@ -127,6 +129,12 @@ router.get('/me', async (req, res) => {
       fullName: user.full_name,
       phone: user.phone,
       role: user.role,
+      emiratesId: user.emirates_id,
+      dob: user.dob,
+      avatarUrl: user.avatar_url,
+      plan: user.plan,
+      billingCycle: user.billing_cycle,
+      planStarted: user.plan_started,
       createdAt: user.created_at
     });
   } catch (error) {
@@ -135,6 +143,118 @@ router.get('/me', async (req, res) => {
       return res.status(401).json({ message: 'Invalid or expired token' });
     }
     console.error('Get user error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Resolve the authenticated user id from the Bearer token.
+function getUserId(req) {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (!token) return null;
+    return jwt.verify(token, process.env.JWT_SECRET).userId;
+  } catch (error) {
+    return null;
+  }
+}
+
+// Re-fetch + serialize the current user (shared by profile/billing updates).
+async function serializeUser(id) {
+  const [users] = await pool.execute(
+    `SELECT id, email, full_name, phone, role, emirates_id, dob, avatar_url,
+            plan, billing_cycle, plan_started, created_at
+     FROM users WHERE id = ?`,
+    [id]
+  );
+  if (users.length === 0) return null;
+  const u = users[0];
+  return {
+    id: u.id,
+    email: u.email,
+    fullName: u.full_name,
+    phone: u.phone,
+    role: u.role,
+    emiratesId: u.emirates_id,
+    dob: u.dob,
+    avatarUrl: u.avatar_url,
+    plan: u.plan,
+    billingCycle: u.billing_cycle,
+    planStarted: u.plan_started,
+    createdAt: u.created_at,
+  };
+}
+
+// Update profile (General information)
+router.put('/profile', async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+
+    const { fullName, phone, emiratesId, dob, avatarUrl } = req.body;
+    await pool.execute(
+      `UPDATE users SET full_name = ?, phone = ?, emirates_id = ?, dob = ?, avatar_url = ?
+       WHERE id = ?`,
+      [
+        fullName || null,
+        phone || null,
+        emiratesId || null,
+        dob || null,
+        avatarUrl !== undefined ? avatarUrl : null,
+        userId,
+      ]
+    );
+    res.json(await serializeUser(userId));
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Change password (Security)
+router.post('/change-password', async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Current and new password are required' });
+    }
+    if (String(newPassword).length < 6) {
+      return res.status(400).json({ message: 'New password must be at least 6 characters' });
+    }
+
+    const [users] = await pool.execute('SELECT password FROM users WHERE id = ?', [userId]);
+    if (users.length === 0) return res.status(404).json({ message: 'User not found' });
+
+    const isMatch = await bcrypt.compare(currentPassword, users[0].password);
+    if (!isMatch) return res.status(400).json({ message: 'Current password is incorrect' });
+
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(newPassword, salt);
+    await pool.execute('UPDATE users SET password = ? WHERE id = ?', [hashed, userId]);
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update billing plan (Billing)
+router.put('/billing', async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+
+    const { plan, billingCycle } = req.body;
+    await pool.execute(
+      `UPDATE users SET plan = ?, billing_cycle = ?, plan_started = CURDATE() WHERE id = ?`,
+      [plan || 'pro', billingCycle || 'monthly', userId]
+    );
+    res.json(await serializeUser(userId));
+  } catch (error) {
+    console.error('Update billing error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
